@@ -1,3 +1,4 @@
+const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 const HTMLWebpackPluginConfig = new HtmlWebpackPlugin({
@@ -13,8 +14,8 @@ module.exports = {
 	],
 	// output 是放入產生出來的結果的相關參數
 	output: {
-		path: `${__dirname}/dist`,
-		filename: 'index_bundle.js',
+		path: path.resolve(__dirname, 'public'),
+		filename: 'bundle.js',
 	},
 	resolve: {
 		extensions: ['.js', '.jsx','css', '.scss']
@@ -56,13 +57,28 @@ module.exports = {
 						loader: 'sass-loader'
 					}
 				]
+			},
+			{
+				test: /\.(png|jpg|gif|jpg|svg)$/,
+				use: [
+				  {
+					loader: 'url-loader?limit=8192&name=img/[hash:8].[name].[ext]',
+					options: {
+                        limit:50,
+                        outputPath:'contents/images/'
+                    }
+				  }
+				]
 			}
         ]
     },
 	// devServer 則是 webpack-dev-server 設定
 	devServer: {
 		inline: true,
-		port: 3000,
+		contentBase: path.join(__dirname, "public"),
+		publicPath: "/",
+		compress: true,
+		port: 3000
 	},
 	// plugins 放置所使用的外掛
 	plugins: [HTMLWebpackPluginConfig],
